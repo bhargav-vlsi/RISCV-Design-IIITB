@@ -245,7 +245,7 @@ We take pythagorean example from platform and execute it to understand its flow.
 
 ![maker_chip_pythagorean](./Images2/maker_chip_pythagorean.png)
 
-### Few other sample exercise in Maker chip platform (combinational circuits0
+### Few other sample exercise in Maker chip platform (combinational circuits)
 Here we consider simple logic gates as examples.
 
 ![maker_chip_gates](./Images2/maker_chip_gates.png)
@@ -282,7 +282,9 @@ Identifiers are elements used to refer some location or value or signal. There a
 
 -- They must start with two lower case letters. 
 lower_case -> pipe signal
+
 CamelCase -> state signal
+
 UPPER_KEY -> keyword signal
 
 -- They must not end with numbers.
@@ -302,6 +304,18 @@ Here is sample pipeline given as lab exercise.
 ![maker_chip_cycle_calc](./Images2/maker_chip_cycle_calc.png)
 
 ### Validity
+Validity is a feature in TL-verilog not available in other RTL languages. It is easier to debug, better error checking and automated clock gatig in TL-verilog. If we have multiple stages of computation, then we use validity to indicate the valid output available to consider it for next set of computations.
+
+### Clock gating
+In most of circuits, clock consumes more power as it is generated continuously from clock generator circuit. Clock gating avoids toggling of clock signals. We use condition of validity to perform clock gating.
+
+### Distance calculator
+Here we use pythagoras theorem to calculate distance between two points through a given path as shown.
+
+![maker_chip_dsitance_calc](./Images2/maker_chip_dsitance_calc.png)
+
+### Calculator with single value memory Lab
+
 
 </details>
 
