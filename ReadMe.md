@@ -314,7 +314,7 @@ Here we use pythagoras theorem to calculate distance between two points through 
 
 ![maker_chip_distance_calc](./Images2/maker_chip_distance_calc.png)
 
-//### Calculator with single value memory Lab
+<!--- ### Calculator with single value memory Lab --->
 
 
 </details>
