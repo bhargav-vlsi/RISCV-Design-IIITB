@@ -312,7 +312,7 @@ In most of circuits, clock consumes more power as it is generated continuously f
 ### Distance calculator
 Here we use pythagoras theorem to calculate distance between two points through a given path as shown.
 
-![maker_chip_dsitance_calc](./Images2/maker_chip_dsitance_calc.png)
+![maker_chip_distance_calc](./Images2/maker_chip_distance_calc.png)
 
 ### Calculator with single value memory Lab
 
