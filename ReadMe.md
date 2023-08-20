@@ -332,23 +332,148 @@ This section describes about micr-architecture of single cycle RISCV CPU and its
 Here,we implement the following basic blocks:
 
 Program Counter (PC)
+
 Imem-Rd ( Instruction Memory)
+
 Instruction Decoder
+
 Register File Read
+
 Arithmatic Logic Unit (ALU)
+
 Register File Write
+
 Branch
+
+![maker_chip_micro_arch](./Images2/maker_chip_micro_arch.png)
 
 ### Next PC lab
 
+Program counter stores address of next instruction.
 ```
 $pc[31:0] = $reset ? 32'b0 : >>1$pc + 32'd4;
 ```
 ![maker_chip_next_pc](./Images2/maker_chip_next_pc.png)
 
 
+### Fetch lab
+This reads instruction according to address stored in PC.
+
+```
+cpu
+      @0
+         $reset = *reset;
+         $pc[31:0] = $reset ? 32'b0 : >>1$pc + 32'd4;
+      @1 
+         $imem_rd_addr[M4_IMEM_INDEX_CNT-1:0] = $pc[M4_IMEM_INDEX_CNT+1:2];
+         $imem_rd_en = !$reset;
+         $instr[31:0] = $imem_rd_data[31:0];
+         
+      ?$imem_rd_en
+         @1
+            $imem_rd_data[31:0] = /imem[$imem_rd_addr]$instr; 
 
 
+
+      // Note: Because of the magic we are using for visualisation, if visualisation is enabled below,
+      //       be sure to avoid having unassigned signals (which you might be using for random inputs)
+      //       other than those specifically expected in the labs. You'll get strange errors for these.
+
+   
+   // Assert these to end simulation (before Makerchip cycle limit).
+   *passed = *cyc_cnt > 40;
+   *failed = 1'b0;
+   
+   // Macro instantiations for:
+   //  o instruction memory
+   //  o register file
+   //  o data memory
+   //  o CPU visualization
+   |cpu
+      m4+imem(@1)    // Args: (read stage)
+      //m4+rf(@1, @1)  // Args: (read stage, write stage) - if equal, no register bypass is required
+      //m4+dmem(@4)    // Args: (read/write stage)
+      //m4+myth_fpga(@0)  // Uncomment to run on fpga
+
+   m4+cpu_viz(@4)
+```
+
+![maker_chip_fetch](./Images2/maker_chip_fetch.png)
+
+### Decode
+We decode instruction fetched from memory.
+```
+|cpu
+      @0
+         $reset = *reset;
+         $pc[31:0] = $reset ? 32'b0 : >>1$pc + 32'd4;
+      @1 
+         $imem_rd_addr[M4_IMEM_INDEX_CNT-1:0] = $pc[M4_IMEM_INDEX_CNT+1:2];
+         $imem_rd_en = !$reset;
+         $instr[31:0] = $imem_rd_data[31:0];
+         
+      ?$imem_rd_en
+         @1
+            $imem_rd_data[31:0] = /imem[$imem_rd_addr]$instr; 
+            
+      @1
+         $is_u_instr = $instr[6:2] ==? 5'b0x101;
+         
+         $is_s_instr = $instr[6:2] ==? 5'b0100x;
+         
+         $is_r_instr = $instr[6:2] ==? 5'b01011 ||
+                       $instr[6:2] ==? 5'b011x0 ||
+                       $instr[6:2] ==? 5'b10100;
+         
+         $is_j_instr = $instr[6:2] ==? 5'b11011;
+         
+         $is_i_instr = $instr[6:2] ==? 5'b0000x ||
+                       $instr[6:2] ==? 5'b001x0 ||
+                       $instr[6:2] ==? 5'b11001;
+         
+         $is_b_instr = $instr[6:2] ==? 5'b11000;
+         
+         
+         $imm[31:0] = $is_i_instr ? {{21{$instr[31]}}, $instr[30:20]} :
+                      $is_s_instr ? {{21{$instr[31]}}, $instr[30:25], $instr[11:7]} :
+                      $is_b_instr ? {{20{$instr[31]}}, $instr[7], $instr[30:25], $instr[11:8], 1'b0} :
+                      $is_u_instr ? {$instr[31:12], 12'b0} :
+                      $is_j_instr ? {{12{$instr[31]}}, $instr[19:12], $instr[20], $instr[30:21], 1'b0} :
+                                    32'b0;
+         
+         
+         $rs2[4:0] = $instr[24:20];
+         $rs1[4:0] = $instr[19:15];
+         $rd[4:0]  = $instr[11:7];
+         $opcode[6:0] = $instr[6:0];
+         $func7[6:0] = $instr[31:25];
+         $func3[2:0] = $instr[14:12];
+
+
+      // Note: Because of the magic we are using for visualisation, if visualisation is enabled below,
+      //       be sure to avoid having unassigned signals (which you might be using for random inputs)
+      //       other than those specifically expected in the labs. You'll get strange errors for these.
+
+   
+   // Assert these to end simulation (before Makerchip cycle limit).
+   *passed = *cyc_cnt > 40;
+   *failed = 1'b0;
+   
+   // Macro instantiations for:
+   //  o instruction memory
+   //  o register file
+   //  o data memory
+   //  o CPU visualization
+   |cpu
+      m4+imem(@1)    // Args: (read stage)
+      //m4+rf(@1, @1)  // Args: (read stage, write stage) - if equal, no register bypass is required
+      //m4+dmem(@4)    // Args: (read/write stage)
+      //m4+myth_fpga(@0)  // Uncomment to run on fpga
+
+   m4+cpu_viz(@4) 
+```
+
+![maker_chip_decode](./Images2/maker_chip_decode.png)
 
 
 </details>
