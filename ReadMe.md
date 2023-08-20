@@ -314,7 +314,41 @@ Here we use pythagoras theorem to calculate distance between two points through 
 
 ![maker_chip_distance_calc](./Images2/maker_chip_distance_calc.png)
 
-<!--- ### Calculator with single value memory Lab --->
+### Calculator with single value memory Lab
+Here we modify and design previous calculator to have single value memory and recall use for successive computations.
+
+![maker_chip_single_mem_calc](./Images2/maker_chip_single_mem_calc.png)
+
+</details>
+
+<details>
+<summary>DAY-4</summary>
+
+### Overview
+This section describes about micr-architecture of single cycle RISCV CPU and its various stages which is main aspect of workshop.
+
+### Simple RISCV Micro-architecture
+
+Here,we implement the following basic blocks:
+
+Program Counter (PC)
+Imem-Rd ( Instruction Memory)
+Instruction Decoder
+Register File Read
+Arithmatic Logic Unit (ALU)
+Register File Write
+Branch
+
+### Next PC lab
+
+```
+$pc[31:0] = $reset ? 32'b0 : >>1$pc + 32'd4;
+```
+![maker_chip_next_pc](./Images2/maker_chip_next_pc.png)
+
+
+
+
 
 
 </details>
@@ -324,16 +358,6 @@ Here we use pythagoras theorem to calculate distance between two points through 
 
     
 https://steveicarus.github.io/iverilog/
-
-https://yosyshq.net/yosys/
-
-https://gtkwave.sourceforge.net/
-
-https://ngspice.sourceforge.io/
-
-https://github.com/The-OpenROAD-Project/OpenSTA
-
-http://opencircuitdesign.com/magic/
 
 https://github.com/kunalg123/
 
